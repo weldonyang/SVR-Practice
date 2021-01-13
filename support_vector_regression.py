@@ -25,9 +25,28 @@ print(X)
 print(y)
 
 # Training the SVR model on the whole dataset
+from sklearn.svm import SVR 
+regressor = SVR(kernel='rbf')
+regressor.fit(X, y)
 
 # Predicting a new result
+y_pred = sc_y.inverse_transform(regressor.predict(sc_X.transform([[6.5]])))
 
 # Visualising the SVR results
+plt.scatter(sc_X.inverse_transform(X), sc_y.inverse_transform(y), color='red')                      
+plt.plot(sc_X.inverse_transform(X), sc_y.inverse_transform(regressor.predict(X)), color='blue')    
+plt.title('Salary vs Position Level (SVR)')
+plt.xlabel('Position Level')
+plt.ylabel('Salary')
+plt.show()
 
 # Visualising the SVR results (for higher resolution and smoother curve)
+# NOTE: if you have a large outlier, SVR will NOT catch it properly 
+X_grid = np.arange(min(sc_X.inverse_transform(X)), max(sc_X.inverse_transform(X)), 0.1)                                               
+X_grid = X_grid.reshape((len(X_grid), 1))   
+plt.scatter(sc_X.inverse_transform(X), sc_y.inverse_transform(y), color='red')                       
+plt.plot(X_grid, sc_y.inverse_transform(regressor.predict(sc_X.transform(X_grid))), color='blue')   # transforms X_grid into the correct matrix of degrees 
+plt.title('Salary vs Position Level (SVR)')
+plt.xlabel('Postion Level')
+plt.ylabel('Salary')
+plt.show()
